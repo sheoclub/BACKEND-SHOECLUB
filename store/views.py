@@ -146,19 +146,25 @@ class LogoutView(View):
 
 # ─── Public Views ─────────────────────────────────────────────────
 
-class HomeView(TemplateView, CartMixin):
-    template_name = "home.html"
+class HomeView(View):
+    """API-style root endpoint. Returns store data as JSON for the React frontend."""
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["banners"] = Banner.objects.filter(active=True)
-        context["announcements"] = Announcement.objects.filter(active=True)
-        context["products"] = Product.active.all()[:8]
-        context["featured_products"] = Product.active.filter(is_featured=True)[:4]
-        context["categories"] = Category.objects.filter(is_active=True)
-        context["cart_count"] = self.get_cart_count()
-        context["new_arrivals"] = Product.active.all().order_by("-created_at")[:4]
-        return context
+    def get(self, request, *args, **kwargs):
+        banners = list(Banner.objects.filter(active=True).values())
+        announcements = list(Announcement.objects.filter(active=True).values("message", "link_url"))
+        products = list(Product.active.all()[:8].values("id", "name", "slug", "price", "compare_price", "image", "stock"))
+        featured = list(Product.active.filter(is_featured=True)[:4].values("id", "name", "slug", "price", "compare_price", "image"))
+        categories = list(Category.objects.filter(is_active=True).values("id", "name", "image"))
+        new_arrivals = list(Product.active.all().order_by("-created_at")[:4].values("id", "name", "slug", "price", "compare_price", "image"))
+        return JsonResponse({
+            "banners": banners,
+            "announcements": announcements,
+            "products": products,
+            "featured_products": featured,
+            "categories": categories,
+            "new_arrivals": new_arrivals,
+            "status": "ok",
+        })
 
 
 class ShopView(ListView, CartMixin):
