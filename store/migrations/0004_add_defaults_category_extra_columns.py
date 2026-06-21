@@ -1,7 +1,5 @@
-# Generated manually - adds DEFAULT values to extra columns in store_category
-# that exist in the database but are NOT in the Django model.
-# These columns have NOT NULL constraints but no defaults, so Django INSERT
-# statements fail with NotNullViolation.
+# NO-OP: These columns were manually added to the old production database
+# and are NOT part of the Django model, so they don't exist on a fresh database.
 
 from django.db import migrations
 
@@ -14,11 +12,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunSQL(
-            sql='ALTER TABLE "store_category" ALTER COLUMN "meta_description" SET DEFAULT \'\';',
-            reverse_sql='ALTER TABLE "store_category" ALTER COLUMN "meta_description" DROP DEFAULT;',
-        ),
-        migrations.RunSQL(
-            sql='ALTER TABLE "store_category" ALTER COLUMN "meta_title" SET DEFAULT \'\';',
-            reverse_sql='ALTER TABLE "store_category" ALTER COLUMN "meta_title" DROP DEFAULT;',
+            sql="",
+            reverse_sql=migrations.RunSQL.noop,
         ),
     ]

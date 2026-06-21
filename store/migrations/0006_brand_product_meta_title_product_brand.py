@@ -38,17 +38,12 @@ class Migration(migrations.Migration):
                 "ordering": ["name"],
             },
         ),
-        migrations.SeparateDatabaseAndState(
-            state_operations=[
-                migrations.AddField(
-                    model_name="product",
-                    name="meta_title",
-                    field=models.CharField(
-                        blank=True, max_length=255, verbose_name="Meta Title (SEO)"
-                    ),
-                ),
-            ],
-            database_operations=[],
+        migrations.AddField(
+            model_name="product",
+            name="meta_title",
+            field=models.CharField(
+                blank=True, max_length=255, verbose_name="Meta Title (SEO)"
+            ),
         ),
         migrations.AddField(
             model_name="product",
