@@ -1,11 +1,20 @@
+from django.http import JsonResponse
 from django.urls import include, path
 
 from . import views
 
 
+def backend_status(request):
+    return JsonResponse({"message": "Backend is running"})
+
+
 urlpatterns = [
-    # Public
-    path("", views.HomeView.as_view(), name="home"),
+    # Backend health/status endpoints for API-only deployment.
+    path("", backend_status, name="home"),
+    path("health/", backend_status, name="health"),
+    path("api/health/", backend_status, name="api_health"),
+
+    # Legacy Django template pages
     path("shop", views.ShopView.as_view(), name="shop"),
     path("product/<int:product_id>", views.ProductDetailView.as_view(), name="product_detail"),
     path("about", views.AboutView.as_view(), name="about"),
