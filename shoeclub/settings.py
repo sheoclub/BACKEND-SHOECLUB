@@ -149,10 +149,15 @@ SIMPLE_JWT = {
     "USER_ID_CLAIM": "user_id",
 }
 
-# ─── CORS ────────────────────────────────────────────────────
+# CORS/CSRF: set CORS_ALLOWED_ORIGINS and CSRF_TRUSTED_ORIGINS to your Vercel URL in production.
+def _csv_env(name):
+    return [value.strip() for value in os.environ.get(name, "").split(",") if value.strip()]
+
+
 CORS_ALLOW_ALL_ORIGINS = DEBUG
-CORS_ALLOWED_ORIGINS = os.environ.get("CORS_ALLOWED_ORIGINS", "").split(",") if os.environ.get("CORS_ALLOWED_ORIGINS") else []
+CORS_ALLOWED_ORIGINS = _csv_env("CORS_ALLOWED_ORIGINS")
 CORS_ALLOW_CREDENTIALS = True
+CSRF_TRUSTED_ORIGINS = _csv_env("CSRF_TRUSTED_ORIGINS") or CORS_ALLOWED_ORIGINS
 
 # ─── Email (console for dev) ─────────────────────────────────
 EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend")
